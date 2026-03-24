@@ -1,0 +1,84 @@
+---
+import { Image } from 'astro:assets';
+import { type Lang } from '../../i18n/languages';
+import { useTranslations } from '../../i18n/utils';
+
+import waitingArea from '../../assets/gallery/waiting-area.jpg';
+import reception from '../../assets/gallery/reception.jpg';
+import treatmentDetail from '../../assets/gallery/treatment-detail.jpg';
+import equipmentCloseup from '../../assets/gallery/equipment-closeup.jpg';
+import sterilization from '../../assets/gallery/sterilization.jpg';
+import treatmentOverview from '../../assets/gallery/treatment-overview.jpg';
+
+import gwanghwamun from '../../assets/nearby/gwanghwamun.jpg';
+import gyeongbok from '../../assets/nearby/gyeongbok.jpg';
+import sejongCenter from '../../assets/nearby/sejong-center.jpg';
+import kingSejong from '../../assets/nearby/king-sejong.jpg';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const clinicPhotos = [
+  { src: waitingArea, alt: 'Waiting area' },
+  { src: reception, alt: 'Reception desk' },
+  { src: treatmentDetail, alt: 'Treatment room detail' },
+  { src: equipmentCloseup, alt: 'Equipment closeup' },
+  { src: sterilization, alt: 'Sterilization area' },
+  { src: treatmentOverview, alt: 'Treatment room overview' },
+];
+
+const nearbyPhotos = [
+  { src: gwanghwamun, alt: 'Gwanghwamun Gate' },
+  { src: gyeongbok, alt: 'Gyeongbok Palace' },
+  { src: sejongCenter, alt: 'Sejong Center for the Performing Arts' },
+  { src: kingSejong, alt: 'Statue of King Sejong the Great' },
+];
+---
+
+<section id="gallery" class="py-20 md:py-28 bg-slate-100">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <h2 class="text-3xl lg:text-4xl font-bold text-center text-slate-900 mb-16 font-heading">
+      {t('gallery.title')}
+    </h2>
+
+    <!-- Clinic Photos -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 md:gap-6 mb-16">
+      {clinicPhotos.map((photo) => (
+        <div class="aspect-square overflow-hidden rounded-xl">
+          <Image
+            src={photo.src}
+            alt={photo.alt}
+            widths={[500, 800, 1200]}
+            sizes="(max-width: 640px) 50vw, 33vw"
+            format="webp"
+            quality={80}
+            class="w-full h-full object-cover hover:scale-105 transition-transform duration-300 cursor-pointer"
+            loading="lazy"
+          />
+        </div>
+      ))}
+    </div>
+
+    <!-- Nearby Attractions -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+      {nearbyPhotos.map((photo) => (
+        <div class="aspect-video overflow-hidden rounded-xl">
+          <Image
+            src={photo.src}
+            alt={photo.alt}
+            widths={[500, 800, 1200]}
+            sizes="(max-width: 768px) 50vw, 25vw"
+            format="webp"
+            quality={80}
+            class="w-full h-full object-cover"
+            loading="lazy"
+          />
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

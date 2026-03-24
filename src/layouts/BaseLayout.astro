@@ -1,0 +1,123 @@
+---
+import SEOHead from '../components/seo/SEOHead.astro';
+import StructuredData from '../components/seo/StructuredData.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import { languages, type Lang } from '../i18n/languages';
+import { clinic } from '../data/clinic';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  lang: Lang;
+  canonicalPath: string;
+  ogImage?: string;
+  keywords?: string;
+}
+
+const { title, description, lang, canonicalPath, ogImage, keywords } = Astro.props;
+const htmlLang = languages[lang].htmlLang;
+---
+
+<!doctype html>
+<html lang={htmlLang} dir="ltr">
+  <head>
+    <SEOHead
+      title={title}
+      description={description}
+      lang={lang}
+      canonicalPath={canonicalPath}
+      ogImage={ogImage}
+      keywords={keywords}
+    />
+    <StructuredData lang={lang} />
+  </head>
+  <body class="bg-warm-50 text-slate-700 antialiased">
+    <a href="#main-content" class="skip-to-content focus:not-sr-only focus:ring-2 focus:ring-brand-500">
+      Skip to content
+    </a>
+
+    <Header lang={lang} currentPath={canonicalPath} />
+
+    <main id="main-content">
+      <slot />
+    </main>
+
+    <Footer lang={lang} />
+
+    <!-- Back to Top (desktop) -->
+    <button
+      id="back-to-top"
+      class="hidden md:block fixed bottom-5 right-5 bg-brand-600 hover:bg-brand-700 text-white p-3 rounded-full shadow-lg transition-all duration-300 opacity-0 pointer-events-none z-30 cursor-pointer"
+      aria-label="Back to top"
+    >
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+      </svg>
+    </button>
+
+    <!-- Sticky mobile booking bar -->
+    <div id="mobile-book-bar" class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 py-3 flex gap-2 translate-y-full transition-transform duration-300">
+      <a
+        href={clinic.links.naverBooking}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex-1 flex items-center justify-center gap-2 py-3 bg-[#03c75a] text-white font-bold rounded-xl text-sm"
+      >
+        <span class="font-black">N</span>
+        {lang === 'ko' ? '예약' : 'Book'}
+      </a>
+      <a
+        href={`tel:${clinic.phone.tel}`}
+        class="flex items-center justify-center gap-2 py-3 px-5 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl shadow-md text-sm"
+      >
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+        </svg>
+        {lang === 'ko' ? '전화' : 'Call'}
+      </a>
+    </div>
+
+    <script>
+      const btn = document.getElementById('back-to-top');
+      const mobileBar = document.getElementById('mobile-book-bar');
+
+      window.addEventListener('scroll', () => {
+        const scrolled = window.scrollY > 500;
+
+        if (btn) {
+          btn.classList.toggle('opacity-0', !scrolled);
+          btn.classList.toggle('pointer-events-none', !scrolled);
+          btn.classList.toggle('opacity-100', scrolled);
+          btn.classList.toggle('pointer-events-auto', scrolled);
+        }
+
+        if (mobileBar) {
+          mobileBar.classList.toggle('translate-y-full', !scrolled);
+          mobileBar.classList.toggle('translate-y-0', scrolled);
+        }
+      }, { passive: true });
+
+      if (btn) {
+        btn.addEventListener('click', () => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      }
+    </script>
+
+    <!-- Scroll reveal observer -->
+    <script>
+      const revealElements = document.querySelectorAll('[data-reveal], [data-reveal-stagger]');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+      revealElements.forEach(el => observer.observe(el));
+    </script>
+  </body>
+</html>

@@ -1,0 +1,24 @@
+---
+import { getCollection, render } from 'astro:content';
+import MarkdownLayout from '../../../layouts/MarkdownLayout.astro';
+
+export async function getStaticPaths() {
+  const procedures = await getCollection('procedures', ({ data }) => data.lang === 'ko');
+  return procedures.map((entry) => ({
+    params: { slug: entry.id.replace('ko/', '') },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<MarkdownLayout
+  title={entry.data.title}
+  description={entry.data.description}
+  lang="ko"
+  canonicalPath={`/ko/procedures/${entry.id.replace('ko/', '')}`}
+>
+  <Content />
+</MarkdownLayout>

@@ -1,0 +1,64 @@
+---
+import { Image } from 'astro:assets';
+import { type Lang } from '../../i18n/languages';
+import { useTranslations, getLocalizedPath } from '../../i18n/utils';
+import dentalChair from '../../assets/equipment/dental-chair.jpg';
+import treatmentRoom from '../../assets/equipment/treatment-room.jpg';
+import microscope from '../../assets/equipment/microscope.jpg';
+import xrayPanel from '../../assets/equipment/xray-panel.png';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const images = [
+  { src: dentalChair, alt: 'Dental chair with equipment' },
+  { src: treatmentRoom, alt: 'Treatment room overview' },
+  { src: microscope, alt: 'Dental microscope' },
+  { src: xrayPanel, alt: 'Digital X-ray machine' },
+];
+---
+
+<section id="equipment" class="py-20 md:py-28 bg-slate-100">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
+      <!-- Text -->
+      <div>
+        <h2 class="text-3xl lg:text-4xl font-bold text-slate-900 mb-6 font-heading">
+          {t('equipment.title')}
+        </h2>
+        <p class="mb-6 leading-relaxed text-slate-600 text-base">
+          {t('equipment.desc')}
+        </p>
+        <a
+          href={getLocalizedPath(lang, '/equipment')}
+          class="inline-flex items-center gap-2 text-brand-600 hover:text-brand-800 font-semibold transition-colors duration-200 group"
+        >
+          {t('equipment.learnMore')}
+          <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+
+      <!-- Image Grid -->
+      <div class="grid grid-cols-2 gap-4">
+        {images.map((img) => (
+          <Image
+            src={img.src}
+            alt={img.alt}
+            widths={[500, 800, 1200]}
+            sizes="(max-width: 768px) 50vw, 250px"
+            format="webp"
+            quality={80}
+            class="rounded-xl shadow-lg object-cover aspect-square hover:scale-105 transition-transform duration-300"
+            loading="lazy"
+          />
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

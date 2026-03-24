@@ -1,0 +1,218 @@
+---
+import { Image } from 'astro:assets';
+import { type Lang } from '../../i18n/languages';
+import { clinic } from '../../data/clinic';
+
+import reception from '../../assets/gallery/reception.jpg';
+import treatmentDetail from '../../assets/gallery/treatment-detail.jpg';
+import equipmentCloseup from '../../assets/gallery/equipment-closeup.jpg';
+import sterilization from '../../assets/gallery/sterilization.jpg';
+import treatmentOverview from '../../assets/gallery/treatment-overview.jpg';
+import dentalChair from '../../assets/equipment/dental-chair.jpg';
+import microscope from '../../assets/equipment/microscope.jpg';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const address = lang === 'ko' ? clinic.address.ko.full : clinic.address.en.full;
+
+const photos = [
+  { src: reception, alt: 'Reception' },
+  { src: dentalChair, alt: 'Treatment room' },
+  { src: microscope, alt: 'Zeiss microscope' },
+  { src: treatmentDetail, alt: 'Treatment detail' },
+  { src: sterilization, alt: 'Sterilization' },
+  { src: treatmentOverview, alt: 'Overview' },
+];
+---
+
+<!-- The Clinic -->
+<section id="gallery" class="py-20 md:py-28 bg-slate-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+
+    <div class="text-center mb-14">
+      <h2 class="text-3xl lg:text-4xl font-bold font-heading mb-3 text-brand-600">
+        {lang === 'ko' ? '클리닉 둘러보기' : 'Visit us'}
+      </h2>
+      <p class="text-slate-500 max-w-lg mx-auto text-sm">
+        {lang === 'ko'
+          ? 'Zeiss 현미경, Vatech 디지털 CT 등 최첨단 장비로 정밀 진료합니다.'
+          : 'Zeiss surgical microscopes, Vatech digital CT, and industry-leading equipment for precise care.'}
+      </p>
+    </div>
+
+    <!-- Photo grid with lightbox -->
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 mb-16">
+      {photos.map((photo, i) => (
+        <button
+          class="aspect-square overflow-hidden rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
+          data-lightbox-trigger={i}
+          aria-label={`View ${photo.alt}`}
+        >
+          <Image
+            src={photo.src}
+            alt={photo.alt}
+            widths={[500, 800, 1200]}
+            sizes="(max-width: 768px) 50vw, 33vw"
+            format="webp"
+            quality={80}
+            class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+            loading="lazy"
+          />
+        </button>
+      ))}
+    </div>
+
+    <!-- Lightbox overlay -->
+    <div id="lightbox" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/90 backdrop-blur-sm transition-opacity duration-300" role="dialog" aria-modal="true">
+      <button id="lightbox-close" class="absolute top-4 right-4 text-white/70 hover:text-white z-10 p-2" aria-label="Close">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+      </button>
+      <button id="lightbox-prev" class="absolute left-4 text-white/70 hover:text-white z-10 p-2" aria-label="Previous">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+      </button>
+      <button id="lightbox-next" class="absolute right-4 text-white/70 hover:text-white z-10 p-2" aria-label="Next">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+      </button>
+      <img id="lightbox-img" src="" alt="" class="max-h-[85vh] max-w-[90vw] object-contain rounded-lg" />
+    </div>
+
+    <!-- Location: Map + Info side by side -->
+    <div id="location">
+      <h3 class="text-xl font-bold font-heading mb-6 text-center text-brand-600">
+        {lang === 'ko' ? '오시는 길' : 'Location'}
+      </h3>
+
+      <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        <!-- Map takes 3 cols on desktop -->
+        <div class="lg:col-span-3 aspect-[4/3] lg:aspect-auto lg:min-h-[360px] rounded-xl overflow-hidden border border-slate-200">
+          <iframe
+            src={clinic.links.googleMapsEmbed}
+            width="100%"
+            height="100%"
+            style="border:0;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Clinic location"
+          ></iframe>
+        </div>
+
+        <!-- Info takes 2 cols -->
+        <div class="lg:col-span-2 flex flex-col justify-center">
+          <h4 class="font-bold text-lg font-heading mb-2 text-brand-600">{clinic.name[lang]}</h4>
+          <p class="text-slate-500 text-sm mb-5">{address}</p>
+
+          <div class="space-y-3 text-sm text-slate-500 mb-6">
+            <div class="flex items-start gap-3">
+              <svg class="w-4 h-4 mt-0.5 text-brand-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <div>
+                <p class="text-slate-900 font-medium">{lang === 'ko' ? '진료 시간' : 'Hours'}</p>
+                <p>{lang === 'ko' ? '월-금 10:00-18:30 · 토 10:00-14:00' : 'Mon-Fri 10:00-18:30 · Sat 10:00-14:00'}</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-3">
+              <svg class="w-4 h-4 mt-0.5 text-brand-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <div>
+                <p class="text-slate-900 font-medium">{lang === 'ko' ? '지하철' : 'Subway'}</p>
+                <p>{lang === 'ko'
+                  ? '1호선 종각역 · 3호선 경복궁역 · 5호선 광화문역'
+                  : 'Line 1 Jonggak · Line 3 Gyeongbokgung · Line 5 Gwanghwamun'}</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-3">
+              <svg class="w-4 h-4 mt-0.5 text-brand-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+              <div>
+                <p class="text-slate-900 font-medium">{lang === 'ko' ? '전화' : 'Phone'}</p>
+                <p>{lang === 'ko' ? clinic.phone.domestic : clinic.phone.international}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-col sm:flex-row gap-3">
+            <a
+              href={clinic.links.naverMap}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center justify-center gap-2 py-3 px-5 bg-[#03c75a] hover:bg-[#02b350] text-white font-bold rounded-xl transition-colors text-sm"
+            >
+              <span class="font-black">N</span>
+              {lang === 'ko' ? '네이버 지도' : 'Naver Map'}
+            </a>
+            <a
+              href={`https://maps.google.com/?q=${encodeURIComponent('London Dental Clinic Seoul')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center justify-center gap-2 py-3 px-5 bg-white hover:bg-slate-50 text-slate-700 font-semibold rounded-xl border border-slate-200 transition-colors text-sm"
+            >
+              <svg viewBox="0 0 24 24" class="w-4 h-4"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+              {lang === 'ko' ? '구글 지도' : 'Google Maps'}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement;
+  const triggers = document.querySelectorAll('[data-lightbox-trigger]');
+  const images: string[] = [];
+  let currentIndex = 0;
+
+  triggers.forEach((btn) => {
+    const img = btn.querySelector('img');
+    if (img) images.push(img.src);
+    btn.addEventListener('click', () => {
+      currentIndex = parseInt(btn.getAttribute('data-lightbox-trigger') || '0');
+      show(currentIndex);
+    });
+  });
+
+  function show(i: number) {
+    currentIndex = (i + images.length) % images.length;
+    lightboxImg!.src = images[currentIndex];
+    lightbox!.classList.remove('hidden');
+    lightbox!.classList.add('flex');
+    lightbox!.style.opacity = '0';
+    lightboxImg!.style.transform = 'scale(0.9)';
+    lightboxImg!.style.transition = 'transform 0.3s ease-out';
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => {
+      lightbox!.style.opacity = '1';
+      lightboxImg!.style.transform = 'scale(1)';
+    });
+  }
+
+  function close() {
+    lightbox!.style.opacity = '0';
+    lightboxImg!.style.transform = 'scale(0.9)';
+    setTimeout(() => {
+      lightbox!.classList.add('hidden');
+      lightbox!.classList.remove('flex');
+      document.body.style.overflow = '';
+    }, 300);
+  }
+
+  document.getElementById('lightbox-close')?.addEventListener('click', close);
+  document.getElementById('lightbox-prev')?.addEventListener('click', () => show(currentIndex - 1));
+  document.getElementById('lightbox-next')?.addEventListener('click', () => show(currentIndex + 1));
+  lightbox?.addEventListener('click', (e) => { if (e.target === lightbox) close(); });
+  document.addEventListener('keydown', (e) => {
+    if (lightbox?.classList.contains('hidden')) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowLeft') show(currentIndex - 1);
+    if (e.key === 'ArrowRight') show(currentIndex + 1);
+  });
+</script>

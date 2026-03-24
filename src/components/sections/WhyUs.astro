@@ -1,0 +1,89 @@
+---
+import { Image } from 'astro:assets';
+import { type Lang } from '../../i18n/languages';
+import { clinic } from '../../data/clinic';
+import clinicInterior from '../../assets/gallery/waiting-area.jpg';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+
+// SVG icon paths (Lucide-style, 24x24 viewBox)
+const iconSvgs: Record<string, string> = {
+  chat: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+  shield: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>',
+  clock: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+  file: '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>',
+};
+
+const painPoints = lang === 'ko'
+  ? [
+      { icon: 'shield', problem: '과잉진료가 걱정되는 치과', solution: '필요한 치료만 정직하게. 네이버 리뷰에서 "과잉진료 없다"는 말이 가장 많습니다.' },
+      { icon: 'clock', problem: '5분만에 끝나는 스케일링', solution: '꼼꼼하게, 시간을 들여 제대로 진료합니다.' },
+      { icon: 'chat', problem: '설명 없이 진행되는 치료', solution: '박지연 원장이 직접 진료하며, 모든 치료 과정을 상세히 설명드립니다.' },
+      { icon: 'file', problem: '바쁘다고 제대로 안 봐주는 치과', solution: '한 분 한 분 충분한 시간을 들여 맞춤 진료합니다. 영국 수련 경험을 바탕으로 꼼꼼하게.' },
+    ]
+  : [
+      { icon: 'chat', problem: "Can't explain your symptoms properly", solution: "Dr. Park trained in London and speaks native-level English. No interpreter needed — just talk to her directly." },
+      { icon: 'shield', problem: 'Worried about unnecessary treatment', solution: "She'll only recommend what you actually need. It's the most common praise in her Naver reviews." },
+      { icon: 'clock', problem: 'Rushed in and out in 5 minutes', solution: 'She takes her time. Every patient gets a proper, unhurried appointment.' },
+      { icon: 'file', problem: "Can't get English paperwork for your insurance", solution: 'Detailed English-language receipts provided. She can help with international insurance documentation.' },
+    ];
+---
+
+<section id="why-us" class="py-20 md:py-28 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+
+      <!-- Left: Clinic photo -->
+      <div class="relative" data-reveal>
+        <Image
+          src={clinicInterior}
+          alt={lang === 'ko' ? '런던치과 내부' : 'London Dental Clinic interior'}
+          widths={[600, 900, 1200]}
+          sizes="(max-width: 1024px) 100vw, 50vw"
+          format="webp"
+          quality={85}
+          class="rounded-2xl shadow-lg w-full"
+          loading="lazy"
+        />
+        <div class="absolute -bottom-4 right-4 sm:right-8 bg-brand-500 text-white rounded-xl px-5 py-3 shadow-lg">
+          <p class="text-2xl font-bold font-heading">5.0</p>
+          <p class="text-[10px] text-white/80 uppercase tracking-wider">{lang === 'ko' ? '네이버 평점' : 'Naver Rating'}</p>
+        </div>
+      </div>
+
+      <!-- Right: Pain points -->
+      <div data-reveal>
+        <h2 class="text-3xl lg:text-4xl font-bold text-brand-600 font-heading mb-4 leading-tight">
+          {lang === 'ko'
+            ? '이런 고민, 해본 적 있으시죠?'
+            : "Sound familiar?"}
+        </h2>
+        <p class="text-slate-500 mb-10">
+          {lang === 'ko'
+            ? '런던치과에서는 다릅니다.'
+            : "These are the reasons patients come to Dr. Park — and stay."}
+        </p>
+
+        <div class="space-y-6">
+          {painPoints.map((point) => (
+            <div class="flex gap-4">
+              <div class="w-10 h-10 rounded-lg bg-brand-50 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                  <Fragment set:html={iconSvgs[point.icon]} />
+                </svg>
+              </div>
+              <div>
+                <p class="font-semibold text-slate-400 mb-1 line-through decoration-slate-300 decoration-2">{point.problem}</p>
+                <p class="text-sm text-slate-700 leading-relaxed">{point.solution}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

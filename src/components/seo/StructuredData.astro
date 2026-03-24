@@ -1,0 +1,72 @@
+---
+import { clinic } from '../../data/clinic';
+import type { Lang } from '../../i18n/languages';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const site = Astro.site?.origin ?? 'https://www.londondental.co.kr';
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': ['Dentist', 'LocalBusiness'],
+  name: 'London Dental Clinic | 런던치과',
+  alternateName: '런던치과의원',
+  image: `${site}/images/og-image.jpg`,
+  url: site,
+  telephone: clinic.phone.international,
+  email: clinic.email,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '97 Jong-ro 5-gil, 2nd Floor',
+    addressLocality: 'Jongno-gu',
+    addressRegion: 'Seoul',
+    postalCode: clinic.postalCode,
+    addressCountry: 'KR',
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: clinic.geo.latitude,
+    longitude: clinic.geo.longitude,
+  },
+  openingHoursSpecification: [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+      opens: '09:30',
+      closes: '18:30',
+    },
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: 'Saturday',
+      opens: '09:30',
+      closes: '14:00',
+    },
+  ],
+  priceRange: '$$',
+  availableLanguage: [
+    { '@type': 'Language', name: 'English' },
+    { '@type': 'Language', name: 'Korean' },
+  ],
+  sameAs: [
+    clinic.links.naverMap,
+    clinic.links.naverBooking,
+  ],
+  founder: {
+    '@type': 'Person',
+    name: 'Dr. Fiona Park',
+    jobTitle: 'Dentist',
+    alumniOf: [
+      { '@type': 'CollegeOrUniversity', name: 'Queen Mary University of London' },
+      { '@type': 'CollegeOrUniversity', name: 'Seoul National University' },
+    ],
+  },
+  medicalSpecialty: 'Dentistry',
+  currenciesAccepted: 'KRW',
+  paymentAccepted: 'Cash, Credit Card, Korean Health Insurance',
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(structuredData)} />

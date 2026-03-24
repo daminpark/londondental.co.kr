@@ -1,0 +1,95 @@
+---
+import { Image } from 'astro:assets';
+import { type Lang } from '../../i18n/languages';
+import { useTranslations } from '../../i18n/utils';
+import { clinic } from '../../data/clinic';
+import clinicExterior from '../../assets/clinic-exterior.jpg';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const address = lang === 'ko' ? clinic.address.ko.full : clinic.address.en.full;
+---
+
+<section id="location" class="py-20 md:py-28 bg-logo-gray text-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <h2 class="text-3xl lg:text-4xl font-bold text-center mb-16 font-heading">
+      {t('location.title')}
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
+      <!-- Map -->
+      <div class="aspect-[4/3] rounded-xl overflow-hidden shadow-2xl border-2 border-white/10">
+        <iframe
+          src={clinic.links.googleMapsEmbed}
+          width="100%"
+          height="100%"
+          style="border:0;"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="Clinic location on Google Maps"
+        ></iframe>
+      </div>
+
+      <!-- Address Info -->
+      <div class="text-center md:text-left">
+        <Image
+          src={clinicExterior}
+          alt="London Dental Clinic exterior"
+          widths={[500, 800, 1200]}
+          sizes="(max-width: 768px) 100vw, 50vw"
+          format="webp"
+          quality={80}
+          class="rounded-xl shadow-lg mb-8 w-full max-w-sm mx-auto md:mx-0"
+          loading="lazy"
+        />
+
+        <h3 class="font-semibold mb-3 text-xl font-heading">{clinic.name[lang]}</h3>
+
+        <p class="mb-5 text-slate-300 leading-relaxed">
+          <svg class="w-4 h-4 inline mr-1 text-brand-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+          </svg>
+          {address}
+        </p>
+
+        <ul class="space-y-3 text-sm text-slate-300">
+          <li class="flex items-start gap-2">
+            <svg class="w-4 h-4 mt-0.5 text-brand-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+            </svg>
+            <span>
+              <strong class="text-white">{t('location.subway')}</strong>
+              {t('location.subwayDesc')}
+            </span>
+          </li>
+          <li class="flex items-start gap-2">
+            <svg class="w-4 h-4 mt-0.5 text-brand-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            </svg>
+            <span>
+              <strong class="text-white">{t('location.nearby')}</strong>
+              {t('location.nearbyDesc')}
+            </span>
+          </li>
+        </ul>
+
+        <div class="mt-8">
+          <a
+            href={clinic.links.naverMap}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 py-3 px-6 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
+          >
+            <span class="font-bold">N</span>
+            {t('location.viewNaver')}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

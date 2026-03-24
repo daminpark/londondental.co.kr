@@ -1,0 +1,42 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import type { Lang } from '../i18n/languages';
+import { clinic } from '../data/clinic';
+
+interface Props {
+  title: string;
+  description: string;
+  lang: Lang;
+  canonicalPath: string;
+}
+
+const { title, description, lang, canonicalPath } = Astro.props;
+const phone = lang === 'ko' ? clinic.phone.domestic : clinic.phone.international;
+const ctaText = lang === 'ko' ? '예약 문의' : 'Schedule an appointment';
+---
+
+<BaseLayout title={title} description={description} lang={lang} canonicalPath={canonicalPath}>
+  <article class="py-16 md:py-24 bg-white">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <h1 class="text-3xl lg:text-4xl font-bold text-slate-900 mb-8 font-heading">{title}</h1>
+
+      <div class="procedure-content">
+        <slot />
+      </div>
+
+      <!-- CTA -->
+      <div class="mt-12 pt-8 border-t border-slate-200 text-center">
+        <p class="text-sm text-slate-500 mb-3">{ctaText}</p>
+        <a
+          href={`tel:${clinic.phone.tel}`}
+          class="inline-flex items-center gap-2 py-3 px-6 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-lg shadow hover:shadow-md transition-all duration-300"
+        >
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+          </svg>
+          {phone}
+        </a>
+      </div>
+    </div>
+  </article>
+</BaseLayout>

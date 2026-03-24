@@ -1,0 +1,73 @@
+---
+import { type Lang } from '../../i18n/languages';
+import { useTranslations, getLocalizedPath } from '../../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const credentials = lang === 'ko'
+  ? [
+      { year: '2005-2010', text: '런던 퀸메리 대학교, 치의학 학사 (BDS)' },
+      { year: '2013-', text: '서울대학교 치의학대학원, 치의학 석사 (MSD)' },
+      { year: '2010-', text: '영국 치과의사 협회 (BDA) 회원' },
+      { year: '2018-', text: '대한치과의사협회 (KDA) 회원' },
+    ]
+  : [
+      { year: '2005-2010', text: 'Queen Mary University of London, BDS' },
+      { year: '2013-', text: 'Seoul National University, MSD (Dental Anesthesia)' },
+      { year: '2010-', text: 'British Dental Association (BDA) Member' },
+      { year: '2018-', text: 'Korean Dental Association (KDA) Member' },
+    ];
+---
+
+<section id="about" class="py-20 md:py-28 bg-slate-50">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6">
+    <div class="text-center mb-12" data-reveal>
+      <h2 class="text-3xl lg:text-4xl font-bold text-brand-600 font-heading mb-6">
+        {t('about.title')}
+      </h2>
+      <p class="text-lg leading-relaxed text-slate-600 max-w-2xl mx-auto">
+        {t('about.bio')}
+      </p>
+    </div>
+
+    <!-- Credentials -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10 max-w-2xl mx-auto" data-reveal-stagger>
+      {credentials.map((cred) => (
+        <div class="flex gap-3 items-start bg-slate-50 rounded-lg p-4">
+          <span class="text-xs font-mono text-brand-600 bg-brand-50 rounded-md px-2 py-1 flex-shrink-0 mt-0.5">{cred.year}</span>
+          <p class="text-sm text-slate-700">{cred.text}</p>
+        </div>
+      ))}
+    </div>
+
+    <!-- University badges -->
+    <div class="flex items-center justify-center gap-6 mb-10">
+      <div class="flex items-center gap-3 bg-slate-50 rounded-lg px-4 py-3">
+        <img src="/images/emblems/seoul-national-university.svg" alt="Seoul National University" class="h-10 w-auto" loading="lazy" />
+        <span class="text-xs text-slate-500 font-medium">Seoul National<br/>University</span>
+      </div>
+      <div class="flex items-center gap-3 bg-slate-50 rounded-lg px-4 py-3">
+        <img src="/images/emblems/barts-london.svg" alt="Barts & The London" class="h-10 w-auto" loading="lazy" />
+        <span class="text-xs text-slate-500 font-medium">Barts & The London<br/>School of Medicine</span>
+      </div>
+    </div>
+
+    <div class="text-center">
+      <a
+        href={getLocalizedPath(lang, '/about')}
+        data-procedure-modal
+        class="inline-flex items-center gap-2 text-brand-600 hover:text-brand-700 font-semibold text-sm transition-colors group"
+      >
+        {t('about.viewProfile')}
+        <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>

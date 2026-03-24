@@ -1,0 +1,92 @@
+---
+import LanguagePicker from './LanguagePicker.astro';
+import { type Lang } from '../../i18n/languages';
+import { useTranslations, getLocalizedPath } from '../../i18n/utils';
+import { clinic } from '../../data/clinic';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const phone = lang === 'ko' ? clinic.phone.domestic : clinic.phone.international;
+const address = lang === 'ko' ? clinic.address.ko.full : clinic.address.en.full;
+const currentPath = Astro.url.pathname;
+const year = new Date().getFullYear();
+---
+
+<footer class="bg-logo-gray-dark text-white/80 py-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-sm mb-8">
+      <!-- Clinic Info -->
+      <div>
+        <img src="/images/logo-banner.svg" alt="London Dental Clinic" class="h-10 mb-4 brightness-200" />
+        <p class="leading-relaxed mb-2">{address}</p>
+        <p class="text-xs">
+          {t('footer.rep')} | {t('footer.bizReg')} {clinic.businessReg}
+        </p>
+      </div>
+
+      <!-- Quick Links -->
+      <div>
+        <h5 class="font-semibold text-white mb-3 uppercase tracking-wider text-xs">
+          {t('footer.siteLinks')}
+        </h5>
+        <ul class="space-y-2">
+          <li><a href="#home" class="hover:text-brand-400 transition-colors">{t('nav.home')}</a></li>
+          <li><a href="#about" class="hover:text-brand-400 transition-colors">{t('nav.about')}</a></li>
+          <li><a href="#why-us" class="hover:text-brand-400 transition-colors">{t('nav.whyUs')}</a></li>
+          <li><a href="#procedures" class="hover:text-brand-400 transition-colors">{t('nav.procedures')}</a></li>
+          <li><a href="#location" class="hover:text-brand-400 transition-colors">{t('nav.location')}</a></li>
+          <li><a href={getLocalizedPath(lang, '/faq')} class="hover:text-brand-400 transition-colors">{t('footer.faq')}</a></li>
+          <li><a href={getLocalizedPath(lang, '/privacy-policy')} class="hover:text-brand-400 transition-colors">{t('footer.privacy')}</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact -->
+      <div>
+        <h5 class="font-semibold text-white mb-3 uppercase tracking-wider text-xs">
+          {t('footer.contact')}
+        </h5>
+        <ul class="space-y-2">
+          <li>
+            <a href={`tel:${clinic.phone.tel}`} class="hover:text-brand-400 flex items-center gap-2 transition-colors">
+              <svg class="w-4 h-4 text-brand-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+              </svg>
+              {phone}
+            </a>
+          </li>
+          <li>
+            <a href={`mailto:${clinic.email}`} class="hover:text-brand-400 flex items-center gap-2 transition-colors">
+              <svg class="w-4 h-4 text-brand-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              {clinic.email}
+            </a>
+          </li>
+          <li>
+            <a href={clinic.links.naverBooking} target="_blank" rel="noopener noreferrer" class="hover:text-brand-400 flex items-center gap-2 transition-colors">
+              <span class="w-4 h-4 flex-shrink-0 text-brand-400 font-bold text-xs">N</span>
+              {t('cta.bookNaver')}
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Language -->
+      <div>
+        <h5 class="font-semibold text-white mb-3 uppercase tracking-wider text-xs">
+          {t('footer.language')}
+        </h5>
+        <LanguagePicker lang={lang} currentPath={currentPath} variant="footer" />
+      </div>
+    </div>
+
+    <!-- Copyright -->
+    <div class="text-center text-xs text-slate-500 border-t border-slate-700 pt-6 mt-8">
+      Copyright &copy; {year} {clinic.name[lang]} | All Rights Reserved.
+    </div>
+  </div>
+</footer>

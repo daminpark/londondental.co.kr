@@ -1,0 +1,138 @@
+---
+import LanguagePicker from './LanguagePicker.astro';
+import { type Lang } from '../../i18n/languages';
+import { useTranslations, getLocalizedPath } from '../../i18n/utils';
+import { clinic } from '../../data/clinic';
+
+interface Props {
+  lang: Lang;
+  currentPath: string;
+}
+
+const { lang, currentPath } = Astro.props;
+const t = useTranslations(lang);
+const phone = lang === 'ko' ? clinic.phone.domestic : clinic.phone.international;
+
+const navItems = [
+  { href: '#home', label: t('nav.home') },
+  { href: '#about', label: t('nav.about') },
+  { href: '#testimonials', label: t('nav.reviews') },
+  { href: '#procedures', label: t('nav.procedures') },
+  { href: '#why-us', label: t('nav.whyUs') },
+  { href: '#gallery', label: t('nav.gallery') },
+  { href: '#location', label: t('nav.location') },
+];
+---
+
+<header class="bg-white/95 backdrop-blur-sm shadow-sm sticky top-0 z-40 transition-shadow duration-300">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="flex justify-between items-center h-16 md:h-20">
+      <!-- Logo -->
+      <a href={getLocalizedPath(lang, '/')} class="flex-shrink-0" aria-label="London Dental Clinic Home">
+        <img src="/images/logo-banner.svg" alt="London Dental Clinic | 런던치과" class="h-10 md:h-12 w-auto" />
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden lg:flex items-center gap-1 xl:gap-2 text-sm" aria-label="Main navigation">
+        {navItems.map((item) => (
+          <a
+            href={item.href}
+            class="px-3 py-2 rounded-md text-slate-600 hover:text-brand-600 hover:bg-brand-50/50 transition-colors duration-200 font-medium"
+          >
+            {item.label}
+          </a>
+        ))}
+
+        <a
+          href={`tel:${clinic.phone.tel}`}
+          class="flex items-center gap-1.5 px-3 py-2 text-slate-600 hover:text-brand-600 transition-colors duration-200"
+          aria-label="Call clinic"
+        >
+          <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+          </svg>
+          <span class="text-xs xl:text-sm">{phone}</span>
+        </a>
+
+        <div class="border-l border-slate-200 pl-3 ml-1">
+          <LanguagePicker lang={lang} currentPath={currentPath} variant="header" />
+        </div>
+      </nav>
+
+      <!-- Mobile Menu Button -->
+      <button
+        id="mobile-menu-btn"
+        class="lg:hidden p-2 rounded-md text-slate-600 hover:text-brand-600 hover:bg-brand-50 transition-colors duration-200"
+        aria-label="Toggle menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <svg id="menu-open-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+        </svg>
+        <svg id="menu-close-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Nav -->
+  <nav
+    id="mobile-menu"
+    class="lg:hidden hidden absolute top-full left-0 right-0 z-30 bg-white shadow-lg border-t border-slate-100 overflow-y-auto max-h-[calc(100vh-4rem)]"
+    aria-label="Mobile navigation"
+  >
+    <div class="px-4 pt-2 pb-4 space-y-1">
+      {navItems.map((item) => (
+        <a
+          href={item.href}
+          class="mobile-nav-link block px-4 py-3 rounded-lg text-base font-medium text-slate-700 hover:text-brand-700 hover:bg-brand-50 transition-colors duration-200"
+        >
+          {item.label}
+        </a>
+      ))}
+
+      <a
+        href={`tel:${clinic.phone.tel}`}
+        class="mobile-nav-link flex items-center gap-2 px-4 py-3 rounded-lg text-base font-medium text-slate-700 hover:text-brand-700 hover:bg-brand-50 transition-colors duration-200"
+      >
+        <svg class="w-4 h-4 text-brand-600" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+        </svg>
+        {phone}
+      </a>
+
+      <div class="pt-3 border-t border-slate-100 mt-2">
+        <LanguagePicker lang={lang} currentPath={currentPath} variant="mobile" />
+      </div>
+    </div>
+  </nav>
+</header>
+
+<script>
+  const btn = document.getElementById('mobile-menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  const openIcon = document.getElementById('menu-open-icon');
+  const closeIcon = document.getElementById('menu-close-icon');
+
+  if (btn && menu && openIcon && closeIcon) {
+    btn.addEventListener('click', () => {
+      const isOpen = !menu.classList.contains('hidden');
+      menu.classList.toggle('hidden');
+      openIcon.classList.toggle('hidden');
+      closeIcon.classList.toggle('hidden');
+      btn.setAttribute('aria-expanded', String(!isOpen));
+    });
+
+    // Close on nav link click
+    menu.querySelectorAll('.mobile-nav-link').forEach((link) => {
+      link.addEventListener('click', () => {
+        menu.classList.add('hidden');
+        openIcon.classList.remove('hidden');
+        closeIcon.classList.add('hidden');
+        btn.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
+</script>

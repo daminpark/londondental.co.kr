@@ -1,0 +1,200 @@
+@import "tailwindcss";
+
+/* ─── Design Tokens (CSS custom properties synced with logo #00adb9) ─── */
+@theme {
+  /* Explicit white/black */
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  /* Brand teal - derived from logo #00adb9 */
+  --color-brand-50: #e6f7f8;
+  --color-brand-100: #b3e8ec;
+  --color-brand-200: #80d9e0;
+  --color-brand-300: #4dcbd4;
+  --color-brand-400: #26c0cb;
+  --color-brand-500: #00adb9;
+  --color-brand-600: #009aa5;
+  --color-brand-700: #008490;
+  --color-brand-800: #006d77;
+  --color-brand-900: #004d55;
+  --color-brand-950: #003038;
+
+  /* Logo gray - neutral scale derived from logo text #727273 */
+  --color-logo-gray: #727273;
+  --color-logo-gray-dark: #5a5a5b;
+  --color-logo-gray-light: #8a8a8b;
+
+  /* Slate neutrals - anchored to logo gray #727273 */
+  --color-slate-50: #f5f5f5;
+  --color-slate-100: #ececec;
+  --color-slate-200: #d6d6d6;
+  --color-slate-300: #b8b8b9;
+  --color-slate-400: #9a9a9b;
+  --color-slate-500: #8a8a8b;
+  --color-slate-600: #7d7d7e;
+  --color-slate-700: #727273;
+  --color-slate-800: #636364;
+  --color-slate-900: #555556;
+  --color-slate-950: #484849;
+
+  /* Warm backgrounds */
+  --color-warm-50: #fafaf9;
+  --color-warm-100: #f5f5f4;
+  --color-warm-200: #e7e5e4;
+
+  /* Font families */
+  --font-heading: 'DM Sans', 'Pretendard', system-ui, sans-serif;
+  --font-body: 'DM Sans', 'Pretendard', system-ui, sans-serif;
+
+  /* Spacing scale extensions */
+  --spacing-18: 4.5rem;
+  --spacing-22: 5.5rem;
+  --spacing-26: 6.5rem;
+  --spacing-30: 7.5rem;
+}
+
+/* ─── Base Styles ─── */
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-slate-700);
+  background-color: var(--color-warm-50);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
+/* ─── Focus styles for accessibility ─── */
+:focus-visible {
+  outline: 2px solid var(--color-brand-500);
+  outline-offset: 2px;
+}
+
+/* ─── Skip to content ─── */
+.skip-to-content {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  z-index: 100;
+  padding: 1rem;
+  background: white;
+}
+
+.skip-to-content:focus {
+  top: 0;
+}
+
+/* ─── Smooth image loading ─── */
+img {
+  content-visibility: auto;
+}
+
+/* ─── Procedure/article content styling ─── */
+.procedure-content h4 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-brand-700);
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  font-family: var(--font-heading);
+}
+
+.procedure-content p {
+  color: var(--color-slate-600, #475569);
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  margin-bottom: 1rem;
+}
+
+.procedure-content ul,
+.procedure-content ol {
+  padding-left: 1.25rem;
+  margin-bottom: 1rem;
+  color: var(--color-slate-600, #475569);
+  font-size: 0.9375rem;
+  line-height: 1.75;
+}
+
+.procedure-content ul {
+  list-style-type: disc;
+}
+
+.procedure-content ol {
+  list-style-type: decimal;
+}
+
+.procedure-content li {
+  margin-bottom: 0.375rem;
+}
+
+.procedure-content strong {
+  color: var(--color-slate-800, #1e293b);
+  font-weight: 600;
+}
+
+.procedure-content a {
+  color: var(--color-brand-600);
+}
+
+.procedure-content a:hover {
+  color: var(--color-brand-800);
+}
+
+.procedure-content hr {
+  border-color: var(--color-slate-200, #e2e8f0);
+  margin: 2rem 0;
+}
+
+/* ─── Scroll reveal animations ─── */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+[data-reveal].revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger children */
+[data-reveal-stagger] > * {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+[data-reveal-stagger].revealed > *:nth-child(1) { transition-delay: 0ms; }
+[data-reveal-stagger].revealed > *:nth-child(2) { transition-delay: 80ms; }
+[data-reveal-stagger].revealed > *:nth-child(3) { transition-delay: 160ms; }
+[data-reveal-stagger].revealed > *:nth-child(4) { transition-delay: 240ms; }
+[data-reveal-stagger].revealed > *:nth-child(5) { transition-delay: 320ms; }
+[data-reveal-stagger].revealed > *:nth-child(6) { transition-delay: 400ms; }
+
+[data-reveal-stagger].revealed > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── Button press effect ─── */
+.btn-press {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.btn-press:active {
+  transform: scale(0.97);
+}
+
+/* ─── Card hover lift ─── */
+.card-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px -8px rgba(0,0,0,0.1);
+}

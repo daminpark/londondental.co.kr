@@ -1,0 +1,141 @@
+<!-- Modal overlay: center modal on desktop, bottom sheet on mobile -->
+<div id="procedure-modal" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
+  <!-- Backdrop -->
+  <div id="modal-backdrop" class="absolute inset-0 bg-black/60 backdrop-blur-sm opacity-0 transition-opacity duration-300"></div>
+
+  <!-- DESKTOP: centered modal -->
+  <div id="modal-desktop-container" class="hidden md:flex absolute inset-0 overflow-y-auto items-start justify-center py-12 px-4">
+    <div id="modal-panel-desktop" class="relative bg-white rounded-2xl shadow-2xl w-full max-w-3xl opacity-0 scale-95 transition-all duration-300 ease-out">
+      <button class="modal-close-btn absolute top-4 right-4 z-10 p-2 text-slate-400 hover:text-slate-600 bg-white/80 backdrop-blur rounded-full shadow-sm" aria-label="Close">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+      </button>
+      <div class="modal-content p-8 sm:p-10"></div>
+    </div>
+  </div>
+
+  <!-- MOBILE: bottom sheet -->
+  <div class="md:hidden absolute inset-x-0 bottom-0 transition-transform duration-300 ease-out" id="bottom-sheet">
+    <div class="bg-white rounded-t-3xl shadow-2xl max-h-[85vh] overflow-y-auto">
+      <!-- Drag handle -->
+      <div class="sticky top-0 bg-white rounded-t-3xl pt-3 pb-2 px-6 flex items-center justify-between z-10">
+        <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto"></div>
+      </div>
+      <button class="modal-close-btn absolute top-3 right-4 z-10 p-2 text-slate-400 hover:text-slate-600" aria-label="Close">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+      </button>
+      <div class="modal-content px-6 pb-8"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Procedure modal: center modal on desktop, bottom sheet on mobile.
+  // SECURITY: Only fetches from same origin (our own static pages). Content is trusted.
+  const modal = document.getElementById('procedure-modal')!;
+  const modalBackdrop = document.getElementById('modal-backdrop')!;
+  const desktopContainer = document.getElementById('modal-desktop-container')!;
+  const desktopPanel = document.getElementById('modal-panel-desktop')!;
+  const bottomSheet = document.getElementById('bottom-sheet')!;
+  const contentAreas = modal.querySelectorAll('.modal-content');
+  const closeBtns = modal.querySelectorAll('.modal-close-btn');
+  let originalUrl = '';
+  let originalTitle = '';
+
+  const cache: Record<string, string> = {};
+
+  document.addEventListener('click', async (e) => {
+    const link = (e.target as Element).closest('a[data-procedure-modal]');
+    if (!link) return;
+
+    e.preventDefault();
+    const href = link.getAttribute('href')!;
+    const url = new URL(href, window.location.origin);
+    if (url.origin !== window.location.origin) return;
+
+    originalUrl = window.location.href;
+    originalTitle = document.title;
+    await showModal(url.pathname);
+  });
+
+  async function showModal(pathname: string) {
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+
+    // Animate in: backdrop fade + desktop panel scale + mobile bottom sheet slide
+    requestAnimationFrame(() => {
+      modalBackdrop.classList.remove('opacity-0');
+      modalBackdrop.classList.add('opacity-100');
+      desktopPanel.classList.remove('opacity-0', 'scale-95');
+      desktopPanel.classList.add('opacity-100', 'scale-100');
+      bottomSheet.style.transform = 'translateY(0)';
+    });
+
+    // Reset bottom sheet for initial state
+    bottomSheet.style.transform = 'translateY(100%)';
+
+    // Show loading spinner in all content areas
+    contentAreas.forEach(area => {
+      const spinner = document.createElement('div');
+      spinner.className = 'flex justify-center py-16';
+      const dot = document.createElement('div');
+      dot.className = 'w-8 h-8 border-2 border-brand-500 border-t-transparent rounded-full animate-spin';
+      spinner.appendChild(dot);
+      area.replaceChildren(spinner);
+    });
+
+    if (!cache[pathname]) {
+      const res = await fetch(pathname);
+      const html = await res.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+      const article = doc.querySelector('article');
+      // Trusted same-origin content only
+      cache[pathname] = article ? article.outerHTML : '';
+    }
+
+    contentAreas.forEach(area => {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'max-w-none';
+      const template = document.createElement('template');
+      template.innerHTML = cache[pathname]; // eslint-disable-line -- trusted same-origin content
+      wrapper.appendChild(template.content);
+      area.replaceChildren(wrapper);
+    });
+
+    history.pushState({ modal: true, from: originalUrl }, '', pathname);
+  }
+
+  function closeModal() {
+    // Animate out: reverse all animations
+    modalBackdrop.classList.remove('opacity-100');
+    modalBackdrop.classList.add('opacity-0');
+    desktopPanel.classList.remove('opacity-100', 'scale-100');
+    desktopPanel.classList.add('opacity-0', 'scale-95');
+    bottomSheet.style.transform = 'translateY(100%)';
+    setTimeout(() => {
+      modal.classList.add('hidden');
+      document.body.style.overflow = '';
+    }, 300);
+    if (originalUrl) {
+      history.pushState({}, originalTitle, originalUrl);
+    }
+  }
+
+  closeBtns.forEach(btn => btn.addEventListener('click', closeModal));
+  modalBackdrop.addEventListener('click', closeModal);
+  // Desktop: click outside the panel closes the modal
+  desktopContainer.addEventListener('click', (e) => {
+    if (!desktopPanel.contains(e.target as Node)) closeModal();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal();
+  });
+
+  window.addEventListener('popstate', () => {
+    if (!modal.classList.contains('hidden')) {
+      modal.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+  });
+</script>

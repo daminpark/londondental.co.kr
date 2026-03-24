@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Hero from '../../components/sections/Hero.astro';
+import WhyUs from '../../components/sections/WhyUs.astro';
+import About from '../../components/sections/About.astro';
+import Procedures from '../../components/sections/Procedures.astro';
+import Testimonials from '../../components/sections/Testimonials.astro';
+import ClinicShowcase from '../../components/sections/ClinicShowcase.astro';
+import FinalCTA from '../../components/sections/FinalCTA.astro';
+import ProcedureModal from '../../components/ProcedureModal.astro';
+
+const lang = 'ko' as const;
+---
+
+<BaseLayout
+  title="서울 광화문 이중언어 치과"
+  description="영국/한국 복수 면허 박지연 원장의 이중언어(영어/한국어) 치과 진료. 첨단 기술과 맞춤형 서비스. 지금 예약하세요!"
+  lang={lang}
+  canonicalPath="/ko/"
+>
+  <Hero lang={lang} />
+  <About lang={lang} />
+  <Testimonials lang={lang} />
+  <Procedures lang={lang} />
+  <WhyUs lang={lang} />
+  <ClinicShowcase lang={lang} />
+  <FinalCTA lang={lang} />
+  <ProcedureModal />
+</BaseLayout>

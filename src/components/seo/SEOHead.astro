@@ -1,0 +1,90 @@
+---
+import { clinic } from '../../data/clinic';
+import { languages, type Lang } from '../../i18n/languages';
+
+interface Props {
+  title: string;
+  description: string;
+  lang: Lang;
+  canonicalPath: string;
+  ogImage?: string;
+  keywords?: string;
+  type?: 'website' | 'article';
+}
+
+const {
+  title,
+  description,
+  lang,
+  canonicalPath,
+  ogImage = '/images/og-image.jpg',
+  keywords,
+  type = 'website',
+} = Astro.props;
+
+const site = Astro.site?.origin ?? 'https://www.londondental.co.kr';
+const canonicalUrl = `${site}${canonicalPath}`;
+const alternateLang = lang === 'en' ? 'ko' : 'en';
+const alternatePath = canonicalPath.replace(`/${lang}/`, `/${alternateLang}/`);
+const alternateUrl = `${site}${alternatePath}`;
+const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${site}${ogImage}`;
+const locale = languages[lang].htmlLang.replace('-', '_');
+const alternateLocale = languages[alternateLang].htmlLang.replace('-', '_');
+const fullTitle = `${title} | London Dental Clinic | 런던치과`;
+
+const defaultKeywords = lang === 'ko'
+  ? '영어 치과 서울, 광화문 치과, 런던치과, 이중언어 치과, 임플란트 종로, 종로구 치과, 서울 영어 치과, 치아 미백 서울, 심미 치과 광화문, english dentist seoul'
+  : 'English dentist Seoul, English speaking dentist Korea, dentist Seoul foreigner, dental implants Seoul cost, teeth whitening Seoul, cosmetic dentist Seoul, bilingual dentist Korea, Gwanghwamun dentist, dental tourism Korea, affordable dental care Seoul';
+---
+
+<!-- Basic Meta -->
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<meta name="keywords" content={keywords ?? defaultKeywords} />
+<meta name="author" content="London Dental Clinic" />
+<meta name="theme-color" content="#00adb9" />
+
+<!-- Canonical & Alternates -->
+<link rel="canonical" href={canonicalUrl} />
+<link rel="alternate" hreflang="en" href={lang === 'en' ? canonicalUrl : alternateUrl} />
+<link rel="alternate" hreflang="ko" href={lang === 'ko' ? canonicalUrl : alternateUrl} />
+<link rel="alternate" hreflang="x-default" href={`${site}/en/${canonicalPath.split('/').slice(2).join('/')}`} />
+
+<!-- Verification -->
+<meta name="google-site-verification" content={clinic.verification.google} />
+{clinic.verification.naver && (
+  <meta name="naver-site-verification" content={clinic.verification.naver} />
+)}
+
+<!-- Open Graph -->
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={ogImageUrl} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:type" content={type} />
+<meta property="og:locale" content={locale} />
+<meta property="og:locale:alternate" content={alternateLocale} />
+<meta property="og:site_name" content="London Dental Clinic | 런던치과" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImageUrl} />
+
+<!-- Favicons -->
+<link rel="icon" href="/images/cropped-logo-32x32.png" sizes="32x32" />
+<link rel="icon" href="/images/cropped-logo-192x192.png" sizes="192x192" />
+<link rel="apple-touch-icon" href="/images/cropped-logo-180x180.png" />
+<meta name="msapplication-TileImage" content="/images/cropped-logo-270x270.png" />
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap"
+  rel="stylesheet"
+/>

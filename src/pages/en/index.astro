@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Hero from '../../components/sections/Hero.astro';
+import WhyUs from '../../components/sections/WhyUs.astro';
+import About from '../../components/sections/About.astro';
+import Procedures from '../../components/sections/Procedures.astro';
+import Testimonials from '../../components/sections/Testimonials.astro';
+import ClinicShowcase from '../../components/sections/ClinicShowcase.astro';
+import FinalCTA from '../../components/sections/FinalCTA.astro';
+import ProcedureModal from '../../components/ProcedureModal.astro';
+
+const lang = 'en' as const;
+---
+
+<BaseLayout
+  title="English-Speaking Dentist in Seoul | Cosmetic, Implants & General Care"
+  description="English-speaking dentist in Seoul. UK-trained Dr. Fiona Park offers cosmetic dentistry, implants, whitening & general care at Seoul prices. 5.0 Naver rating. Book online."
+  lang={lang}
+  canonicalPath="/en/"
+>
+  <Hero lang={lang} />
+  <About lang={lang} />
+  <Testimonials lang={lang} />
+  <Procedures lang={lang} />
+  <WhyUs lang={lang} />
+  <ClinicShowcase lang={lang} />
+  <FinalCTA lang={lang} />
+  <ProcedureModal />
+</BaseLayout>

@@ -1,0 +1,181 @@
+---
+import { type Lang } from '../../i18n/languages';
+import { useTranslations } from '../../i18n/utils';
+import { clinic } from '../../data/clinic';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+// 4 curated reviews: 2 Google (EN) + 2 Naver (KO)
+// Left column on desktop: Naver (Korean patients)
+const naverReviews = [
+  {
+    text: '믿고 가는 치과입니다. 직장 근처라 집에서 멀어도 사내치과 두고 찾아가서 진료받을 정도로 좋아요~ 과잉진료 전혀 없고 여러방면으로 생각해주셔서 감동받아요.',
+    textEn: "A clinic I trust completely. Even though it's far from home, I pass by my company's dentist to come here — that's how good it is. Zero unnecessary treatments.",
+    author: 'Rammi',
+    platform: 'naver' as const,
+    lang: 'ko' as const,
+  },
+  {
+    text: '다른치과에서 맨날 보험스케일링 5분컷으로 쫓겨났었는데 여긴 진짜 꼼꼼하게 해주시고 과잉진료없이 다른부분도 잘 봐주십니다. 친절은 덤이고요. 여기 꼭 가세요 두번가셔요!',
+    textEn: "Other clinics always rushed my insurance scaling in 5 minutes, but here they're genuinely thorough. No unnecessary treatments. Definitely go here — go twice!",
+    author: '꿈382',
+    platform: 'naver' as const,
+    lang: 'ko' as const,
+  },
+];
+
+// Right column on desktop: Google (international patients)
+const googleReviews = [
+  {
+    text: "This place is amazing! The only time I've ever looked forward to going to the dentist! If you're looking for an English-speaking dentist in Seoul, this place is perfect. The service is great, the staff is super friendly, and the prices are very reasonable even without insurance.",
+    textKo: '정말 놀라운 곳입니다! 치과 가는 걸 기대한 건 처음이에요! 서울에서 영어 가능한 치과를 찾고 계시다면 여기가 완벽합니다.',
+    author: 'Lucas W.',
+    platform: 'google' as const,
+    lang: 'en' as const,
+  },
+  {
+    text: "I highly recommend London Dental if you are looking for an English speaking dentist in Seoul. I had some pain whilst travelling and they were able to squeeze me in and sorted out the issue really quickly, efficiently, and affordably.",
+    textKo: '서울에서 영어가 가능한 치과를 찾고 계신다면 런던치과를 강력 추천합니다. 여행 중 통증이 있었는데 빠르고 효율적으로 해결해 주셨습니다.',
+    author: 'Nicole S.',
+    platform: 'google' as const,
+    lang: 'en' as const,
+  },
+];
+
+// Mobile carousel: alternate Naver → Google
+const mobileReviews = [naverReviews[0], googleReviews[0], naverReviews[1], googleReviews[1]];
+
+const naverSvg = `<svg viewBox="0 0 24 24" class="w-4 h-4" fill="currentColor"><path d="M16.273 12.845L7.376 0H0v24h7.727V11.155L16.624 24H24V0h-7.727v12.845z"/></svg>`;
+const googleSvg = `<svg viewBox="0 0 24 24" class="w-4 h-4"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>`;
+---
+
+<section id="testimonials" class="py-20 md:py-28 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+
+    <!-- Header -->
+    <div class="text-center mb-6">
+      <h2 class="text-3xl lg:text-4xl font-bold text-brand-600 font-heading mb-4">
+        {lang === 'ko' ? '환자분들의 후기' : 'What patients say'}
+      </h2>
+    </div>
+
+    <!-- Platform badges -->
+    <div class="flex items-center justify-center gap-4 mb-12">
+      <a href={clinic.links.naverMap} target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 bg-white rounded-full px-4 py-2 shadow-sm border border-slate-100 hover:shadow-md transition-shadow text-sm">
+        <span class="text-[#03c75a]"><Fragment set:html={naverSvg} /></span>
+        <span class="font-bold text-slate-900">5.0</span>
+        <div class="flex gap-0.5">
+          {[1,2,3,4,5].map(() => (
+            <svg class="w-3 h-3 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+          ))}
+        </div>
+      </a>
+      <a href="https://maps.google.com/?q=London+Dental+Clinic+Seoul" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 bg-white rounded-full px-4 py-2 shadow-sm border border-slate-100 hover:shadow-md transition-shadow text-sm">
+        <Fragment set:html={googleSvg} />
+        <span class="font-bold text-slate-900">5.0</span>
+        <div class="flex gap-0.5">
+          {[1,2,3,4,5].map(() => (
+            <svg class="w-3 h-3 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+          ))}
+        </div>
+      </a>
+    </div>
+
+    <!-- DESKTOP: 2x2 grid, Naver left + Google right per row, equal height -->
+    <div class="hidden md:grid grid-cols-2 gap-6 mb-10">
+      {[0, 1].map((i) => {
+        const naver = naverReviews[i];
+        const google = googleReviews[i];
+        return (
+          <>
+            <div class="bg-slate-50 rounded-2xl p-6 flex flex-col">
+              <div class="flex items-center gap-2 mb-4">
+                <span class="text-[#03c75a]"><Fragment set:html={naverSvg} /></span>
+                <span class="font-semibold text-sm text-slate-700">{naver.author}</span>
+                <div class="flex gap-0.5 ml-auto">
+                  {[1,2,3,4,5].map(() => (
+                    <svg class="w-3 h-3 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                  ))}
+                </div>
+              </div>
+              <p class="text-sm text-slate-700 leading-relaxed flex-grow">"{naver.text}"</p>
+              <p class="text-xs text-slate-400 mt-3 leading-relaxed italic">"{naver.textEn}"</p>
+            </div>
+            <div class="bg-slate-50 rounded-2xl p-6 flex flex-col">
+              <div class="flex items-center gap-2 mb-4">
+                <Fragment set:html={googleSvg} />
+                <span class="font-semibold text-sm text-slate-700">{google.author}</span>
+                <div class="flex gap-0.5 ml-auto">
+                  {[1,2,3,4,5].map(() => (
+                    <svg class="w-3 h-3 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                  ))}
+                </div>
+              </div>
+              <p class="text-sm text-slate-700 leading-relaxed flex-grow">"{google.text}"</p>
+              <p class="text-xs text-slate-400 mt-3 leading-relaxed italic">"{google.textKo}"</p>
+            </div>
+          </>
+        );
+      })}
+    </div>
+
+    <!-- MOBILE: horizontal carousel -->
+    <div class="md:hidden relative">
+      <div class="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-4 px-4 scrollbar-hide" style="-webkit-overflow-scrolling: touch;">
+        {mobileReviews.map((review) => (
+          <div class="bg-slate-50 rounded-2xl p-5 flex-shrink-0 snap-center flex flex-col" style="width: 85vw;">
+            <!-- Platform + author -->
+            <div class="flex items-center gap-2 mb-3">
+              <span class:list={[review.platform === 'naver' ? 'text-[#03c75a]' : '']}>
+                <Fragment set:html={review.platform === 'naver' ? naverSvg : googleSvg} />
+              </span>
+              <span class="font-semibold text-sm text-slate-700">{review.author}</span>
+              <div class="flex gap-0.5 ml-auto">
+                {[1,2,3,4,5].map(() => (
+                  <svg class="w-3 h-3 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                ))}
+              </div>
+            </div>
+            <!-- Review text -->
+            <p class="text-sm text-slate-700 leading-relaxed flex-grow">"{review.text}"</p>
+            {'textEn' in review && review.textEn && (
+              <p class="text-xs text-slate-400 mt-3 leading-relaxed italic">"{review.textEn}"</p>
+            )}
+            {'textKo' in review && review.textKo && (
+              <p class="text-xs text-slate-400 mt-3 leading-relaxed italic">"{review.textKo}"</p>
+            )}
+          </div>
+        ))}
+      </div>
+      <!-- Scroll indicator dots -->
+      <div class="flex justify-center gap-1.5 mt-2">
+        {mobileReviews.map((_, i) => (
+          <div class:list={['w-1.5 h-1.5 rounded-full', i === 0 ? 'bg-brand-500' : 'bg-slate-300']}></div>
+        ))}
+      </div>
+    </div>
+
+    <!-- See all reviews -->
+    <div class="flex justify-center gap-3 mt-10">
+      <a href={clinic.links.naverMap} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-sm font-semibold text-[#03c75a] hover:underline">
+        <span class="font-black">N</span>
+        {lang === 'ko' ? '네이버에서 더보기' : 'More on Naver'}
+      </a>
+      <span class="text-slate-300">|</span>
+      <a href="https://maps.google.com/?q=London+Dental+Clinic+Seoul" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:underline">
+        <Fragment set:html={googleSvg} />
+        {lang === 'ko' ? '구글에서 더보기' : 'More on Google'}
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+</style>

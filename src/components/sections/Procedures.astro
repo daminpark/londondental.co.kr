@@ -1,0 +1,86 @@
+---
+import { type Lang } from '../../i18n/languages';
+import { useTranslations, getLocalizedPath } from '../../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const procedures = [
+  { slug: 'cosmetic', title: t('procedures.cosmetic'), desc: t('procedures.cosmeticDesc'), icon: '/images/icons/cosmetic.svg' },
+  { slug: 'implants', title: t('procedures.implants'), desc: t('procedures.implantsDesc'), icon: '/images/icons/implant.svg' },
+  { slug: 'prosthodontics', title: t('procedures.prosthodontics'), desc: t('procedures.prosthodonticsDesc'), icon: '/images/icons/prosthodontics.svg' },
+  { slug: 'restorative', title: t('procedures.restorative'), desc: t('procedures.restorativeDesc'), icon: '/images/icons/restorative.svg' },
+  { slug: 'checkups', title: t('procedures.checkups'), desc: t('procedures.checkupsDesc'), icon: '/images/icons/hygiene.svg' },
+  { slug: 'extractions', title: t('procedures.extractions'), desc: t('procedures.extractionsDesc'), icon: '/images/icons/extraction.svg' },
+];
+---
+
+<section id="procedures" class="py-20 md:py-28 bg-slate-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="text-center mb-14" data-reveal>
+      <h2 class="text-3xl lg:text-4xl font-bold text-brand-600 font-heading mb-4">
+        {lang === 'ko' ? '이런 진료를 합니다' : 'How we can help'}
+      </h2>
+    </div>
+
+    <!-- DESKTOP: 3x2 card grid -->
+    <div class="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-6" data-reveal-stagger>
+      {procedures.map((proc) => (
+        <a
+          href={getLocalizedPath(lang, `/procedures/${proc.slug}`)}
+          data-procedure-modal
+          class="group bg-white p-6 rounded-xl shadow-sm hover:shadow-md text-center transition-all duration-300 flex flex-col hover:-translate-y-1 border border-slate-100"
+        >
+          <div class="w-14 h-14 mx-auto mb-4 rounded-xl bg-brand-50 flex items-center justify-center group-hover:bg-brand-100 transition-colors">
+            <img src={proc.icon} alt="" class="w-8 h-8 opacity-80 group-hover:opacity-100 transition-opacity" loading="lazy" />
+          </div>
+          <h4 class="text-lg font-semibold mb-2 text-slate-900 font-heading">{proc.title}</h4>
+          <p class="text-sm text-slate-500 mb-4 flex-grow">{proc.desc}</p>
+          <span class="inline-flex items-center gap-1 text-brand-600 font-semibold text-sm group-hover:gap-2 transition-all">
+            {t('procedures.details')}
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </span>
+        </a>
+      ))}
+    </div>
+
+    <!-- MOBILE: compact list -->
+    <div class="sm:hidden divide-y divide-slate-100 bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+      {procedures.map((proc) => (
+        <a
+          href={getLocalizedPath(lang, `/procedures/${proc.slug}`)}
+          data-procedure-modal
+          class="flex items-center gap-4 px-5 py-4 hover:bg-slate-50 transition-colors"
+        >
+          <div class="w-10 h-10 rounded-lg bg-brand-50 flex items-center justify-center flex-shrink-0">
+            <img src={proc.icon} alt="" class="w-6 h-6 opacity-80" loading="lazy" />
+          </div>
+          <span class="font-semibold text-slate-900 text-sm flex-grow">{proc.title}</span>
+          <svg class="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+      ))}
+    </div>
+
+    <!-- First visit CTA -->
+    <div class="text-center mt-10">
+      <a
+        href={getLocalizedPath(lang, '/first-visit')}
+        data-procedure-modal
+        class="inline-flex items-center gap-2 text-slate-500 hover:text-brand-600 font-medium text-sm transition-colors"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        {lang === 'ko' ? '첫 방문이신가요? 초진 안내 보기' : "First visit? See what to expect"}
+      </a>
+    </div>
+  </div>
+</section>
