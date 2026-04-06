@@ -33,8 +33,8 @@ const alternateLocale = languages[alternateLang].htmlLang.replace('-', '_');
 const fullTitle = `${title} | London Dental Clinic | 런던치과`;
 
 const defaultKeywords = lang === 'ko'
-  ? '영어 치과 서울, 광화문 치과, 런던치과, 이중언어 치과, 임플란트 종로, 종로구 치과, 서울 영어 치과, 치아 미백 서울, 심미 치과 광화문, english dentist seoul'
-  : 'English dentist Seoul, English speaking dentist Korea, dentist Seoul foreigner, dental implants Seoul cost, teeth whitening Seoul, cosmetic dentist Seoul, bilingual dentist Korea, Gwanghwamun dentist, dental tourism Korea, affordable dental care Seoul';
+  ? '영어 치과 서울, 서울 영어 가능 치과, 외국인 치과 서울, 광화문 치과, 런던치과, 이중언어 치과, 임플란트 종로, 종로구 치과, 서울 영어 치과, 치아 미백 서울, 심미 치과 광화문, 영어 가능 치과 추천, english dentist seoul, english speaking dentist korea'
+  : 'English speaking dentist Seoul, English speaking dentist in Seoul, English dentist Seoul Korea, dentist in Seoul for foreigners, English speaking dental clinic Seoul, expat dentist Seoul, international dentist Seoul, bilingual dentist Seoul, dentist near Gwanghwamun, dental implants Seoul, teeth whitening Seoul, cosmetic dentist Seoul, dental tourism Korea, affordable dental care Seoul, best English dentist Korea';
 ---
 
 <!-- Basic Meta -->
@@ -42,10 +42,16 @@ const defaultKeywords = lang === 'ko'
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>{fullTitle}</title>
 <meta name="description" content={description} />
-<meta name="robots" content="index, follow, max-image-preview:large" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
 <meta name="keywords" content={keywords ?? defaultKeywords} />
 <meta name="author" content="London Dental Clinic" />
 <meta name="theme-color" content="#00adb9" />
+
+<!-- Geo & Regional Meta (important for local SEO) -->
+<meta name="geo.region" content="KR-11" />
+<meta name="geo.placename" content="Seoul, Jongno-gu" />
+<meta name="geo.position" content={`${clinic.geo.latitude};${clinic.geo.longitude}`} />
+<meta name="ICBM" content={`${clinic.geo.latitude}, ${clinic.geo.longitude}`} />
 
 <!-- Canonical & Alternates -->
 <link rel="canonical" href={canonicalUrl} />
@@ -63,6 +69,8 @@ const defaultKeywords = lang === 'ko'
 <meta property="og:title" content={fullTitle} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={ogImageUrl} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
 <meta property="og:url" content={canonicalUrl} />
 <meta property="og:type" content={type} />
 <meta property="og:locale" content={locale} />
@@ -74,6 +82,11 @@ const defaultKeywords = lang === 'ko'
 <meta name="twitter:title" content={fullTitle} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={ogImageUrl} />
+
+<!-- AI / LLM discovery -->
+<link rel="alternate" type="text/plain" href={`${site}/llms.txt`} title="LLM Summary" />
+<link rel="alternate" type="text/plain" href={`${site}/llms-full.txt`} title="LLM Full Info" />
+<link rel="alternate" type="text/plain" hreflang="ko" href={`${site}/llms-ko.txt`} title="LLM 한국어 정보" />
 
 <!-- Favicons -->
 <link rel="icon" href="/images/cropped-logo-32x32.png" sizes="32x32" />

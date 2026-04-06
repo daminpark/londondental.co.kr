@@ -34,6 +34,7 @@ export const clinic = {
     naverBooking: 'https://booking.naver.com/booking/13/bizes/185268',
     naverMap: 'https://map.naver.com/p/search/%EB%9F%B0%EB%8D%98%EC%B9%98%EA%B3%BC%EC%9D%98%EC%9B%90/place/1400948670?c=15.00,0,0,0,dh&placePath=%3Fentry%253Dbmp',
     googleMapsEmbed: 'https://maps.google.com/maps?q=London%20Dental%20Clinic%2C%2097%20Jong-ro%205-gil%2C%20Susong-dong%2C%20Jongno-gu%2C%20Seoul%2C%20South%20Korea&t=m&z=15&output=embed&iwloc=near',
+    instagram: 'https://www.instagram.com/london_dental/',
   },
   businessReg: '106-91-61579',
   doctor: {

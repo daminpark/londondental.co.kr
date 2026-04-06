@@ -4,16 +4,22 @@ import type { Lang } from '../../i18n/languages';
 
 interface Props {
   lang: Lang;
+  canonicalPath?: string;
 }
 
-const { lang } = Astro.props;
+const { lang, canonicalPath = lang === 'en' ? '/en/' : '/ko/' } = Astro.props;
 const site = Astro.site?.origin ?? 'https://www.londondental.co.kr';
 
-const structuredData = {
+// --- Dentist / LocalBusiness schema ---
+const dentistSchema = {
   '@context': 'https://schema.org',
-  '@type': ['Dentist', 'LocalBusiness'],
-  name: 'London Dental Clinic | 런던치과',
-  alternateName: '런던치과의원',
+  '@type': ['Dentist', 'MedicalBusiness'],
+  '@id': `${site}/#dentist`,
+  name: 'London Dental Clinic',
+  alternateName: ['런던치과의원', '런던치과', 'London Dental'],
+  description: lang === 'en'
+    ? 'English-speaking dental clinic in Seoul, South Korea. UK-trained Dr. Fiona Park provides cosmetic dentistry, implants, whitening, and general dental care. Bilingual (English/Korean) service near Gwanghwamun.'
+    : '서울 종로구 광화문 이중언어 치과. 영국에서 수련받은 박지연 원장이 직접 진료합니다. 심미치과, 임플란트, 미백, 일반 치과 진료.',
   image: `${site}/images/og-image.jpg`,
   url: site,
   telephone: clinic.phone.international,
@@ -47,26 +53,266 @@ const structuredData = {
   ],
   priceRange: '$$',
   availableLanguage: [
-    { '@type': 'Language', name: 'English' },
-    { '@type': 'Language', name: 'Korean' },
+    { '@type': 'Language', name: 'English', alternateName: 'en' },
+    { '@type': 'Language', name: 'Korean', alternateName: 'ko' },
   ],
   sameAs: [
     clinic.links.naverMap,
     clinic.links.naverBooking,
+    'https://www.instagram.com/london_dental/',
   ],
   founder: {
     '@type': 'Person',
     name: 'Dr. Fiona Park',
+    alternateName: '박지연',
     jobTitle: 'Dentist',
+    description: 'UK and Korea dual-licensed dentist with 15+ years experience',
     alumniOf: [
-      { '@type': 'CollegeOrUniversity', name: 'Queen Mary University of London' },
-      { '@type': 'CollegeOrUniversity', name: 'Seoul National University' },
+      {
+        '@type': 'CollegeOrUniversity',
+        name: 'Barts and The London School of Medicine and Dentistry, Queen Mary University of London',
+      },
+      {
+        '@type': 'CollegeOrUniversity',
+        name: 'Seoul National University School of Dentistry',
+      },
+    ],
+    memberOf: [
+      { '@type': 'Organization', name: 'British Dental Association' },
+      { '@type': 'Organization', name: 'Korean Dental Association' },
     ],
   },
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.9',
+    bestRating: '5',
+    worstRating: '1',
+    ratingCount: '8',
+    reviewCount: '8',
+  },
+  review: [
+    {
+      '@type': 'Review',
+      reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
+      author: { '@type': 'Person', name: 'Lucas W.' },
+      reviewBody: 'If you\'re looking for an English-speaking dentist in Seoul, this place is perfect. The service is great, the staff is super friendly, and the prices are very reasonable even without insurance.',
+    },
+    {
+      '@type': 'Review',
+      reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
+      author: { '@type': 'Person', name: 'Nicole S.' },
+      reviewBody: 'I highly recommend London Dental if you are looking for an English speaking dentist in Seoul. They sorted out the issue really quickly, efficiently, and affordably.',
+    },
+  ],
   medicalSpecialty: 'Dentistry',
   currenciesAccepted: 'KRW',
   paymentAccepted: 'Cash, Credit Card, Korean Health Insurance',
+  areaServed: [
+    {
+      '@type': 'City',
+      name: 'Seoul',
+      containedInPlace: { '@type': 'Country', name: 'South Korea' },
+    },
+  ],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Dental Services',
+    itemListElement: [
+      {
+        '@type': 'OfferCatalog',
+        name: 'Cosmetic Dentistry',
+        itemListElement: [
+          { '@type': 'Offer', itemOffered: { '@type': 'MedicalProcedure', name: 'Teeth Whitening' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'MedicalProcedure', name: 'Veneers' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'MedicalProcedure', name: 'Cosmetic Bonding' } },
+        ],
+      },
+      {
+        '@type': 'OfferCatalog',
+        name: 'Dental Implants',
+        itemListElement: [
+          { '@type': 'Offer', itemOffered: { '@type': 'MedicalProcedure', name: 'Dental Implant Surgery' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'MedicalProcedure', name: 'Implant Crown Restoration' } },
+        ],
+      },
+      {
+        '@type': 'OfferCatalog',
+        name: 'General Dentistry',
+        itemListElement: [
+          { '@type': 'Offer', itemOffered: { '@type': 'MedicalProcedure', name: 'Dental Checkup' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'MedicalProcedure', name: 'Teeth Cleaning & Scaling' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'MedicalProcedure', name: 'Root Canal Treatment' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'MedicalProcedure', name: 'Tooth Extraction' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'MedicalProcedure', name: 'Wisdom Tooth Removal' } },
+        ],
+      },
+      {
+        '@type': 'OfferCatalog',
+        name: 'Prosthodontics',
+        itemListElement: [
+          { '@type': 'Offer', itemOffered: { '@type': 'MedicalProcedure', name: 'Dental Crowns' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'MedicalProcedure', name: 'Dental Bridges' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'MedicalProcedure', name: 'Dentures' } },
+        ],
+      },
+    ],
+  },
+};
+
+// --- FAQPage schema (helps get rich results on Google) ---
+const faqSchemaEn = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Is there an English-speaking dentist in Seoul?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. London Dental Clinic in Jongno-gu, Seoul is run by Dr. Fiona Park, who is fully bilingual in English and Korean. She trained at Barts and The London (Queen Mary University of London) and Seoul National University, and holds dental licenses in both the UK and South Korea.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How much does dental care cost in Seoul for foreigners?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Dental care in Seoul is significantly more affordable than in the US, UK, or Australia. London Dental Clinic accepts Korean National Health Insurance for covered procedures such as scaling, fillings, and extractions. For non-covered cosmetic procedures, we provide transparent pricing. Detailed English receipts are provided for international insurance reimbursement.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Do you accept Korean health insurance?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes, we accept Korean National Health Insurance for covered procedures including scaling, certain fillings, extractions, and senior implant/denture benefits. Please inquire about specific treatments.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Can I use my international insurance at London Dental Clinic?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'We provide detailed English receipts and documentation for you to claim reimbursement from your international insurance provider. Direct billing is typically not possible, but most patients receive full or partial reimbursement.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Where is London Dental Clinic located in Seoul?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'London Dental Clinic is located at 97 Jong-ro 5-gil, 2nd Floor, Jongno-gu, Seoul (near Gwanghwamun). We are a 5-minute walk from Gwanghwamun Station (Line 5), Jonggak Station (Line 1), and Gyeongbokgung Station (Line 3).',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What dental services does London Dental Clinic offer?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'We offer a full range of dental services including cosmetic dentistry (whitening, veneers), dental implants, crowns and bridges, dentures, fillings, root canal treatment, wisdom tooth extraction, checkups, and professional teeth cleaning. All consultations and treatments are conducted in English or Korean.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How do I book an appointment?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'You can book online through Naver Booking or call us at +82-2-732-1917. Booking a few days to a week in advance is recommended. Urgent cases are accommodated as quickly as possible.',
+      },
+    },
+  ],
+};
+
+const faqSchemaKo = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: '런던치과에서 영어 진료가 가능한가요?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: '네, 런던치과의 박지연 원장은 영국 런던대학교(Barts and The London)와 서울대학교 치의학대학원을 졸업하고 영국과 한국 양국의 치과의사 면허를 보유하고 있습니다. 영어와 한국어 모두 유창하게 진료 가능합니다.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '건강보험 적용이 되나요?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: '네, 스케일링, 일부 충치 치료, 발치, 65세 이상 임플란트/틀니 등 건강보험 적용 항목에 대해 국민건강보험을 적용합니다. 구체적인 치료에 대해서는 문의해 주세요.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '런던치과는 어디에 있나요?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: '서울 종로구 종로5길 97, 2층 (수송동)에 위치해 있습니다. 광화문역(5호선), 종각역(1호선), 경복궁역(3호선)에서 도보 5분 거리입니다.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '예약은 어떻게 하나요?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: '네이버 예약 또는 전화(02-732-1917)로 예약하실 수 있습니다. 원하시는 시간에 진료를 받으시려면 며칠~일주일 전에 예약하시는 것을 추천드립니다. 급한 경우 최대한 빠르게 안내해 드립니다.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '어떤 진료를 받을 수 있나요?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: '심미치과(미백, 라미네이트), 임플란트, 크라운/브릿지, 틀니, 충치 치료, 신경 치료, 사랑니 발치, 검진, 스케일링 등 종합적인 치과 진료를 제공합니다.',
+      },
+    },
+  ],
+};
+
+const faqSchema = lang === 'en' ? faqSchemaEn : faqSchemaKo;
+
+// --- BreadcrumbList schema ---
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Home',
+      item: `${site}/${lang}/`,
+    },
+  ],
+};
+
+// Add page-specific breadcrumb if not homepage
+const pathParts = canonicalPath.split('/').filter(Boolean);
+if (pathParts.length > 1) {
+  const pageName = pathParts[pathParts.length - 1]
+    .split('-')
+    .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+  breadcrumbSchema.itemListElement.push({
+    '@type': 'ListItem',
+    position: 2,
+    name: pageName,
+    item: `${site}${canonicalPath}`,
+  });
+}
+
+// --- WebSite schema (enables sitelinks search box) ---
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'London Dental Clinic',
+  alternateName: '런던치과',
+  url: site,
+  inLanguage: [lang === 'en' ? 'en-GB' : 'ko-KR'],
 };
 ---
 
-<script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+<script type="application/ld+json" set:html={JSON.stringify(dentistSchema)} />
+<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+<script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+<script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />

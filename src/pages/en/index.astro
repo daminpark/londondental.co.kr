@@ -7,14 +7,15 @@ import Procedures from '../../components/sections/Procedures.astro';
 import Testimonials from '../../components/sections/Testimonials.astro';
 import ClinicShowcase from '../../components/sections/ClinicShowcase.astro';
 import FinalCTA from '../../components/sections/FinalCTA.astro';
+import SEOContent from '../../components/sections/SEOContent.astro';
 import ProcedureModal from '../../components/ProcedureModal.astro';
 
 const lang = 'en' as const;
 ---
 
 <BaseLayout
-  title="English-Speaking Dentist in Seoul | Cosmetic, Implants & General Care"
-  description="English-speaking dentist in Seoul. UK-trained Dr. Fiona Park offers cosmetic dentistry, implants, whitening & general care at Seoul prices. 5.0 Naver rating. Book online."
+  title="English Speaking Dentist in Seoul, Korea"
+  description="Looking for an English speaking dentist in Seoul? Dr. Fiona Park is UK-trained and dual-licensed (UK & Korea). Cosmetic dentistry, implants, whitening & general care. 5.0 rating. Near Gwanghwamun Station. Book online."
   lang={lang}
   canonicalPath="/en/"
 >
@@ -24,6 +25,7 @@ const lang = 'en' as const;
   <Procedures lang={lang} />
   <WhyUs lang={lang} />
   <ClinicShowcase lang={lang} />
+  <SEOContent lang={lang} />
   <FinalCTA lang={lang} />
   <ProcedureModal />
 </BaseLayout>

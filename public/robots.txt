@@ -2,8 +2,80 @@ User-agent: *
 Allow: /
 Sitemap: https://www.londondental.co.kr/sitemap-index.xml
 
-User-agent: Yeti
+# Google
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Google AI (Gemini, AI Overviews)
+User-agent: Google-Extended
 Allow: /
 
-User-agent: Googlebot
+# Naver
+User-agent: Yeti
+Allow: /
+Crawl-delay: 0
+
+# Naver blog/cafe bot
+User-agent: Naverbot
+Allow: /
+
+# Daum/Kakao
+User-agent: Daum
+Allow: /
+
+# Bing
+User-agent: Bingbot
+Allow: /
+
+# ChatGPT / OpenAI
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+# Perplexity
+User-agent: PerplexityBot
+Allow: /
+
+# Anthropic / Claude
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+# Meta AI
+User-agent: FacebookBot
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+# Cohere
+User-agent: cohere-ai
+Allow: /
+
+# Common Crawl (trains many AI models)
+User-agent: CCBot
+Allow: /
+
+# Apple (Siri, Spotlight)
+User-agent: Applebot
+Allow: /
+
+# Naver Clova X / CUE: AI
+User-agent: ClovaBot
+Allow: /
+
+User-agent: cue-bot
+Allow: /
+
+# Wrtn (뤼튼)
+User-agent: WrtnBot
+Allow: /
+
+# Samsung Bixby
+User-agent: Bixbybot
 Allow: /

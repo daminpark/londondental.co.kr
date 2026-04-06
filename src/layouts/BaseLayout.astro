@@ -31,7 +31,7 @@ const htmlLang = languages[lang].htmlLang;
       ogImage={ogImage}
       keywords={keywords}
     />
-    <StructuredData lang={lang} />
+    <StructuredData lang={lang} canonicalPath={canonicalPath} />
   </head>
   <body class="bg-warm-50 text-slate-700 antialiased">
     <a href="#main-content" class="skip-to-content focus:not-sr-only focus:ring-2 focus:ring-brand-500">
@@ -65,7 +65,7 @@ const htmlLang = languages[lang].htmlLang;
         rel="noopener noreferrer"
         class="flex-1 flex items-center justify-center gap-2 py-3 bg-[#03c75a] text-white font-bold rounded-xl text-sm"
       >
-        <span class="font-black">N</span>
+        <svg viewBox="0 0 24 24" class="w-4 h-4" fill="currentColor"><path d="M16.273 12.845L7.376 0H0v24h7.727V11.155L16.624 24H24V0h-7.727v12.845z"/></svg>
         {lang === 'ko' ? '예약' : 'Book'}
       </a>
       <a

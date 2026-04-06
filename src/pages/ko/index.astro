@@ -7,14 +7,15 @@ import Procedures from '../../components/sections/Procedures.astro';
 import Testimonials from '../../components/sections/Testimonials.astro';
 import ClinicShowcase from '../../components/sections/ClinicShowcase.astro';
 import FinalCTA from '../../components/sections/FinalCTA.astro';
+import SEOContent from '../../components/sections/SEOContent.astro';
 import ProcedureModal from '../../components/ProcedureModal.astro';
 
 const lang = 'ko' as const;
 ---
 
 <BaseLayout
-  title="서울 광화문 이중언어 치과"
-  description="영국/한국 복수 면허 박지연 원장의 이중언어(영어/한국어) 치과 진료. 첨단 기술과 맞춤형 서비스. 지금 예약하세요!"
+  title="영어 가능 치과 서울 | 광화문 런던치과 | 외국인 치과"
+  description="서울 종로구 광화문 영어 진료 치과. 영국/한국 복수 면허 박지연 원장이 직접 진료. 임플란트, 미백, 심미치과, 스케일링. 네이버 평점 5.0. 건강보험 적용. 지금 예약하세요."
   lang={lang}
   canonicalPath="/ko/"
 >
@@ -24,6 +25,7 @@ const lang = 'ko' as const;
   <Procedures lang={lang} />
   <WhyUs lang={lang} />
   <ClinicShowcase lang={lang} />
+  <SEOContent lang={lang} />
   <FinalCTA lang={lang} />
   <ProcedureModal />
 </BaseLayout>
