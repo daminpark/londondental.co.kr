@@ -1,14 +1,18 @@
 {
-  "name": "london-dental",
+  "name": "londondental.co.kr",
   "type": "module",
+  "private": true,
   "version": "0.0.1",
   "engines": {
     "node": ">=22.12.0"
   },
   "scripts": {
     "dev": "astro dev",
+    "check": "astro check",
     "build": "astro build",
     "preview": "astro preview",
+    "verify:dist": "node scripts/verify-dist.mjs",
+    "verify": "npm run check && npm run build && npm run verify:dist",
     "astro": "astro"
   },
   "dependencies": {
@@ -17,5 +21,12 @@
     "astro": "^6.0.8",
     "sharp": "^0.34.5",
     "tailwindcss": "^4.2.2"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "typescript": "^5.9.3"
+  },
+  "overrides": {
+    "vite": "^7.3.5"
   }
 }

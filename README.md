@@ -1,43 +1,88 @@
-# Astro Starter Kit: Minimal
+# London Dental Clinic Website
+
+![London Dental Clinic homepage](docs/screenshots/home-desktop-en.png)
+
+A bilingual Astro website for London Dental Clinic, an English-speaking dental clinic in Seoul. The project is a small, real production site focused on clear patient information, multilingual UX, local search visibility, and AI-era discoverability.
+
+Live site: https://www.londondental.co.kr
+
+## Screenshots
+
+| Homepage | Services |
+| --- | --- |
+| ![Homepage desktop screenshot](docs/screenshots/home-desktop-en.png) | ![Services desktop screenshot](docs/screenshots/services-desktop-en.png) |
+
+## Portfolio Read
+
+This repo is presented as a public portfolio artifact for practical software/product work. It shows how I approach a real small-business problem: make a trustworthy service easy to understand, easy to book, easy for search engines to parse, and easy for humans or code agents to review.
+
+My role covered product framing, site architecture, content structure, implementation, SEO/LLM discoverability, and verification hygiene. Coding agents were used as workflow leverage for exploration, implementation support, and review, while product direction, claims, privacy boundaries, and quality decisions stayed human-owned.
+
+## Problem
+
+London Dental Clinic serves Korean patients, expats, and visitors who may need dental care in English. The site needed to:
+
+- Communicate trust quickly without overclaiming.
+- Support English and Korean users with equivalent routes.
+- Make booking, location, services, and first-visit information easy to find.
+- Improve local SEO for Google/Naver and structured discovery by AI assistants.
+- Keep healthcare-adjacent claims, patient reviews, and clinic assets inside clear public-use boundaries.
+
+## What Is Implemented
+
+- Astro static site with Tailwind CSS and content collections.
+- English/Korean route prefixes with hreflang/canonical metadata.
+- Markdown-backed pages for procedures, FAQ, equipment, first visit, privacy, and doctor profile.
+- Reusable layout, header/footer, mobile booking bar, and responsive procedure modal.
+- LocalBusiness/Dentist, FAQ, Breadcrumb, and WebSite JSON-LD.
+- `robots.txt`, `_headers`, sitemap integration, and `llms.txt`/`llms-full.txt`/`llms-ko.txt`.
+- Real clinic imagery and lightweight mobile-first booking/location flows.
+
+## Architecture
+
+The site is intentionally simple:
+
+- `src/data/clinic.ts` is the canonical source for public clinic facts.
+- `src/content/` holds typed Markdown content for pages and procedures.
+- `src/pages/en` and `src/pages/ko` expose localized routes.
+- `src/components/seo` owns metadata, structured data, and LLM discovery links.
+- `public/` contains static assets, headers, robots, and LLM-facing text files.
+
+See [docs/architecture.md](docs/architecture.md) for a deeper review map.
+
+## Setup
+
+Requires Node `22.12.0` or newer.
 
 ```sh
-npm create astro@latest -- --template minimal
+npm ci
+npm run dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Local dev server: http://localhost:4321
 
-## 🚀 Project Structure
+## Verification
 
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```sh
+npm run check
+npm run build
+npm run verify:dist
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+`npm run verify` runs the content/type check, production build, and post-build smoke checks for key routes, canonical/hreflang metadata, JSON-LD, LLM files, and generated sitemap output.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+## Privacy And Asset Boundaries
 
-Any static assets, like images, can be placed in the `public/` directory.
+This repository is intended for portfolio review, not as a reusable clinic template. Clinic copy, patient review excerpts, logos, photos, university emblems, and business details should not be reused without explicit permission.
 
-## 🧞 Commands
+See [PRIVACY_AND_ASSET_BOUNDARIES.md](PRIVACY_AND_ASSET_BOUNDARIES.md) for the public data and asset policy.
 
-All commands are run from the root of the project, from a terminal:
+## Public Repo Notes
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+Recommended GitHub description:
 
-## 👀 Want to learn more?
+> Bilingual Astro site for an English-speaking dental clinic in Seoul, with local SEO, structured data, and LLM discoverability.
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Suggested topics:
+
+`astro`, `tailwindcss`, `local-seo`, `bilingual`, `structured-data`, `llms-txt`, `static-site`, `portfolio`
