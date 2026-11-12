@@ -67,6 +67,14 @@ const year = new Date().getFullYear();
             </a>
           </li>
           <li>
+            <a href={clinic.links.naverMap} target="_blank" rel="noopener noreferrer" class="hover:text-brand-400 flex items-center gap-2 transition-colors">
+              <svg class="w-4 h-4 text-brand-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+              </svg>
+              {t('location.viewNaver')}
+            </a>
+          </li>
+          <li>
             <a href={clinic.links.naverBooking} target="_blank" rel="noopener noreferrer" class="hover:text-brand-400 flex items-center gap-2 transition-colors">
               <svg viewBox="0 0 24 24" class="w-4 h-4 text-brand-400 flex-shrink-0" fill="currentColor"><path d="M16.273 12.845L7.376 0H0v24h7.727V11.155L16.624 24H24V0h-7.727v12.845z"/></svg>
               {t('cta.bookNaver')}

@@ -1,6 +1,7 @@
 ---
 import { getEntry, render } from 'astro:content';
 import MarkdownLayout from '../../layouts/MarkdownLayout.astro';
+import GettingHere from '../../components/sections/GettingHere.astro';
 
 const entry = await getEntry('pages', 'en/first-visit');
 const { Content } = await render(entry!);
@@ -8,4 +9,5 @@ const { Content } = await render(entry!);
 
 <MarkdownLayout title={entry!.data.title} description={entry!.data.description} lang="en" canonicalPath="/en/first-visit">
   <Content />
+  <GettingHere lang="en" slot="after-content" />
 </MarkdownLayout>
