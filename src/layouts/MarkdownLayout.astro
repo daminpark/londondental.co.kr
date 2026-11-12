@@ -24,6 +24,8 @@ const ctaText = lang === 'ko' ? '예약 문의' : 'Schedule an appointment';
         <slot />
       </div>
 
+      <slot name="after-content" />
+
       <!-- CTA -->
       <div class="mt-12 pt-8 border-t border-slate-200 text-center">
         <p class="text-sm text-slate-500 mb-3">{ctaText}</p>
